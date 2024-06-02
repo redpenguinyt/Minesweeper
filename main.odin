@@ -31,13 +31,10 @@ Game :: struct {
 
 game := Game{}
 
-main :: proc() {
-	// initialize SDL
+init_sdl :: proc() {
 	sdl_init_error := SDL.Init(SDL.INIT_VIDEO)
 	assert(sdl_init_error == 0, SDL.GetErrorString())
-	defer SDL.Quit()
 
-	// Window
 	window := SDL.CreateWindow(
 		"SDL2 Example",
 		SDL.WINDOWPOS_CENTERED,
@@ -47,15 +44,9 @@ main :: proc() {
 		WINDOW_FLAGS,
 	)
 	assert(window != nil, SDL.GetErrorString())
-	defer SDL.DestroyWindow(window)
 
-	// Renderer
-	// This is used throughout the program to render everything.
-	// You only require ONE renderer for the entire program.
 	game.renderer = SDL.CreateRenderer(window, -1, RENDER_FLAGS)
 	assert(game.renderer != nil, SDL.GetErrorString())
-	defer SDL.DestroyRenderer(game.renderer)
-
 	SDL.RenderSetLogicalSize(
 		game.renderer,
 		GRID_WIDTH * TILE_SIDE_LENGTH,
@@ -64,8 +55,20 @@ main :: proc() {
 
 	ttf_init_error := SDL_TTF.Init()
 	assert(ttf_init_error != -1, SDL.GetErrorString())
-	defer SDL_TTF.Quit()
+}
 
+free_sdl :: proc() {
+	defer SDL.Quit()
+	defer SDL.DestroyWindow(window)
+	defer SDL.DestroyRenderer(game.renderer)
+	defer SDL_TTF.Quit()
+}
+
+main :: proc() {
+	init_sdl()
+	defer free_sdl()
+
+	// Set up game
 	game.font = SDL_TTF.OpenFont("mine-sweeper.ttf", FONT_SIZE)
 	assert(game.font != nil, SDL.GetErrorString())
 	create_chars()
