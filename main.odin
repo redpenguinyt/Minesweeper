@@ -22,12 +22,19 @@ Tile :: struct {
 	flagged:      bool,
 }
 
+GameState :: enum {
+	Playing,
+	Died,
+	Won,
+}
+
 Game :: struct {
 	window:   ^SDL.Window,
 	renderer: ^SDL.Renderer,
 	font:     ^SDL_TTF.Font,
 	chars:    [10]Text,
 	grid:     [GRID_WIDTH][GRID_HEIGHT]Tile,
+	state:    GameState,
 }
 
 game := Game{}
@@ -90,6 +97,19 @@ main :: proc() {
 
 		draw_grid()
 
+		#partial switch game.state {
+		case .Died:
+			died_text: Text = create_text("You died", 2)
+			died_text.dest.x = 65
+			died_text.dest.y = 70
+			SDL.RenderCopy(game.renderer, died_text.tex, nil, &died_text.dest)
+		case .Won:
+			died_text: Text = create_text("You won!", 2)
+			died_text.dest.x = 74
+			died_text.dest.y = 90
+			SDL.RenderCopy(game.renderer, died_text.tex, nil, &died_text.dest)
+		}
+
 		SDL.RenderPresent(game.renderer)
 	}
 }
@@ -128,13 +148,11 @@ handle_events :: proc(event: ^SDL.Event) {
 
 		if !game.grid[tile_pos.x][tile_pos.y].flagged {
 			if uncover_tile(tile_pos) {
-				fmt.println("Game over!")
-				break game_loop
+				game.state = GameState.Died
 			}
 
 			if has_cleared_mine_field() {
-				fmt.println("You win!")
-				break game_loop
+				game.state = GameState.Won
 			}
 		}
 	}
