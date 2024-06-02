@@ -105,18 +105,7 @@ main :: proc() {
 
 		draw_grid()
 
-		#partial switch game.state {
-		case .Died:
-			died_text: Text = create_text("You died", 2)
-			died_text.dest.x = 65
-			died_text.dest.y = 70
-			SDL.RenderCopy(game.renderer, died_text.tex, nil, &died_text.dest)
-		case .Won:
-			died_text: Text = create_text("You won!", 2)
-			died_text.dest.x = 74
-			died_text.dest.y = 90
-			SDL.RenderCopy(game.renderer, died_text.tex, nil, &died_text.dest)
-		}
+		draw_game_over_messages()
 
 		SDL.RenderPresent(game.renderer)
 	}
@@ -320,5 +309,20 @@ draw_grid :: proc() {
 				draw_top_right_to_bottom_left(origin, 0, 1)
 			}
 		}
+	}
+}
+
+draw_game_over_messages :: proc() {
+	#partial switch game.state {
+	case .Died:
+		died_text: Text = create_text("You died", 2)
+		died_text.dest.x = 65
+		died_text.dest.y = 70
+		SDL.RenderCopy(game.renderer, died_text.tex, nil, &died_text.dest)
+	case .Won:
+		died_text: Text = create_text("You won!", 2)
+		died_text.dest.x = 74
+		died_text.dest.y = 90
+		SDL.RenderCopy(game.renderer, died_text.tex, nil, &died_text.dest)
 	}
 }
