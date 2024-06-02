@@ -367,6 +367,45 @@ draw_grid :: proc() {
 					},
 				)
 			}
+
+			// Draw X on mine tiles when game is over
+			// oh my god this code is horrific
+			if game.state != .Playing && tile.is_mine {
+				SDL.SetRenderDrawColor(game.renderer, 255, 0, 0, 100)
+
+				draw_top_left_to_bottom_right := proc(
+					origin: SDL.Point,
+					x, y: i32,
+				) {
+					SDL.RenderDrawLine(
+						game.renderer,
+						origin.x + 3 + x,
+						origin.y + 3 + y,
+						origin.x + TILE_SIDE_LENGTH - 3 - y,
+						origin.y + TILE_SIDE_LENGTH - 3 - x,
+					)
+				}
+				draw_top_left_to_bottom_right(origin, 0, 0)
+				draw_top_left_to_bottom_right(origin, 1, 0)
+				draw_top_left_to_bottom_right(origin, 0, 1)
+
+				draw_top_right_to_bottom_left := proc(
+					origin: SDL.Point,
+					x, y: i32,
+				) {
+					SDL.RenderDrawLine(
+						game.renderer,
+						origin.x + TILE_SIDE_LENGTH - 3 - x,
+						origin.y + 3 + y,
+						origin.x + 3 + y,
+						origin.y + TILE_SIDE_LENGTH - 3 - x,
+					)
+				}
+
+				draw_top_right_to_bottom_left(origin, 0, 0)
+				draw_top_right_to_bottom_left(origin, 1, 0)
+				draw_top_right_to_bottom_left(origin, 0, 1)
+			}
 		}
 	}
 }
