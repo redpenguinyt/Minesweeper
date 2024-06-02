@@ -89,7 +89,17 @@ main :: proc() {
 		if SDL.PollEvent(&event) {
 			if event.type == SDL.EventType.QUIT || event.key.keysym.scancode == .ESCAPE do break game_loop
 
-			handle_events(&event)
+			if game.state == .Playing {
+				handle_game_events(&event)
+			} else {
+				// R to restart
+				if event.key.keysym.scancode == .R {
+					game.state = .Playing
+					empty_tileset: [GRID_WIDTH][GRID_HEIGHT]Tile
+					game.grid = empty_tileset
+					generate_mine_field()
+				}
+			}
 		}
 
 		SDL.SetRenderDrawColor(game.renderer, 0, 0, 0, 100)
@@ -114,7 +124,7 @@ main :: proc() {
 	}
 }
 
-handle_events :: proc(event: ^SDL.Event) {
+handle_game_events :: proc(event: ^SDL.Event) {
 	// Hover effect
 	x, y: i32
 	if SDL.GetMouseState(&x, &y) == 1 {
@@ -148,11 +158,11 @@ handle_events :: proc(event: ^SDL.Event) {
 
 		if !game.grid[tile_pos.x][tile_pos.y].flagged {
 			if uncover_tile(tile_pos) {
-				game.state = GameState.Died
+				game.state = .Died
 			}
 
 			if has_cleared_mine_field() {
-				game.state = GameState.Won
+				game.state = .Won
 			}
 		}
 	}
