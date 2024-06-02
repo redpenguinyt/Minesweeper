@@ -76,76 +76,9 @@ main :: proc() {
 
 	game_loop: for {
 		if SDL.PollEvent(&event) {
-			// Quit event is clicking on the X on the window
-			if event.type == SDL.EventType.QUIT {
-				break game_loop
-			}
+			if event.type == SDL.EventType.QUIT || event.key.keysym.scancode == .ESCAPE do break game_loop
 
-			if event.type == SDL.EventType.KEYDOWN {
-				// a #partial switch allows us to ignore other scancode types;
-				// otherwise, the compiler will refuse to compile the program, alerting us of the unhandled cases
-				#partial switch event.key.keysym.scancode {
-				case .ESCAPE:
-					break game_loop
-				}
-			}
-
-			x, y: i32
-			if SDL.GetMouseState(&x, &y) == 1 {
-				tile_pos := SDL.Point {
-					event.button.x / TILE_SIDE_LENGTH,
-					event.button.y / TILE_SIDE_LENGTH,
-				}
-
-				if !game.grid[tile_pos.x][tile_pos.y].flagged {
-					for &column in game.grid {
-						for &tile in column {
-							tile.hovered = false
-						}
-					}
-					game.grid[tile_pos.x][tile_pos.y].hovered = true
-				}
-			} else {
-				for &column in game.grid {
-					for &tile in column {
-						tile.hovered = false
-					}
-				}
-			}
-
-			if event.type == SDL.EventType.MOUSEBUTTONUP &&
-			   event.button.button == 1 {
-				tile_pos := SDL.Point {
-					event.button.x / TILE_SIDE_LENGTH,
-					event.button.y / TILE_SIDE_LENGTH,
-				}
-
-				if !game.grid[tile_pos.x][tile_pos.y].flagged {
-					if uncover_tile(tile_pos) {
-						fmt.println("Game over!")
-						break game_loop
-					}
-
-					if has_cleared_mine_field() {
-						fmt.println("You win!")
-						break game_loop
-					}
-				}
-			}
-
-			if event.type == SDL.EventType.MOUSEBUTTONDOWN &&
-			   event.button.button == 3 {
-				tile_pos := SDL.Point {
-					event.button.x / TILE_SIDE_LENGTH,
-					event.button.y / TILE_SIDE_LENGTH,
-				}
-
-				if !game.grid[tile_pos.x][tile_pos.y].is_uncovered {
-					game.grid[tile_pos.x][tile_pos.y].flagged =
-					!game.grid[tile_pos.x][tile_pos.y].flagged
-				}
-
-			}
+			handle_events(&event)
 		}
 
 		SDL.SetRenderDrawColor(game.renderer, 0, 0, 0, 100)
@@ -153,9 +86,67 @@ main :: proc() {
 
 		draw_grid()
 
-		// actual flipping / presentation of the copy
-		// read comments here :: https://wiki.libsdl.org/SDL_RenderCopy
 		SDL.RenderPresent(game.renderer)
+	}
+}
+
+handle_events :: proc(event: ^SDL.Event) {
+	// Hover effect
+	x, y: i32
+	if SDL.GetMouseState(&x, &y) == 1 {
+		tile_pos := SDL.Point {
+			event.button.x / TILE_SIDE_LENGTH,
+			event.button.y / TILE_SIDE_LENGTH,
+		}
+
+		if !game.grid[tile_pos.x][tile_pos.y].flagged {
+			for &column in game.grid {
+				for &tile in column {
+					tile.hovered = false
+				}
+			}
+			game.grid[tile_pos.x][tile_pos.y].hovered = true
+		}
+	} else {
+		for &column in game.grid {
+			for &tile in column {
+				tile.hovered = false
+			}
+		}
+	}
+
+	// Uncovering a tile
+	if event.type == SDL.EventType.MOUSEBUTTONUP && event.button.button == 1 {
+		tile_pos := SDL.Point {
+			event.button.x / TILE_SIDE_LENGTH,
+			event.button.y / TILE_SIDE_LENGTH,
+		}
+
+		if !game.grid[tile_pos.x][tile_pos.y].flagged {
+			if uncover_tile(tile_pos) {
+				fmt.println("Game over!")
+				break game_loop
+			}
+
+			if has_cleared_mine_field() {
+				fmt.println("You win!")
+				break game_loop
+			}
+		}
+	}
+
+	// Flagging a tile
+	if event.type == SDL.EventType.MOUSEBUTTONDOWN &&
+	   event.button.button == 3 {
+		tile_pos := SDL.Point {
+			event.button.x / TILE_SIDE_LENGTH,
+			event.button.y / TILE_SIDE_LENGTH,
+		}
+
+		if !game.grid[tile_pos.x][tile_pos.y].is_uncovered {
+			game.grid[tile_pos.x][tile_pos.y].flagged =
+			!game.grid[tile_pos.x][tile_pos.y].flagged
+		}
 	}
 }
 
