@@ -187,7 +187,7 @@ main :: proc() {
 					event.button.y / TILE_SIDE_LENGTH,
 				}
 
-				if game.grid[tile_pos.x][tile_pos.y].is_uncovered {
+				if !game.grid[tile_pos.x][tile_pos.y].is_uncovered {
 					game.grid[tile_pos.x][tile_pos.y].flagged =
 					!game.grid[tile_pos.x][tile_pos.y].flagged
 				}
