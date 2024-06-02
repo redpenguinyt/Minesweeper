@@ -23,6 +23,7 @@ Tile :: struct {
 }
 
 Game :: struct {
+	window:   ^SDL.Window,
 	renderer: ^SDL.Renderer,
 	font:     ^SDL_TTF.Font,
 	chars:    [10]Text,
@@ -35,7 +36,7 @@ init_sdl :: proc() {
 	sdl_init_error := SDL.Init(SDL.INIT_VIDEO)
 	assert(sdl_init_error == 0, SDL.GetErrorString())
 
-	window := SDL.CreateWindow(
+	game.window = SDL.CreateWindow(
 		"SDL2 Example",
 		SDL.WINDOWPOS_CENTERED,
 		SDL.WINDOWPOS_CENTERED,
@@ -43,9 +44,9 @@ init_sdl :: proc() {
 		GRID_HEIGHT * TILE_SIDE_LENGTH * 3,
 		WINDOW_FLAGS,
 	)
-	assert(window != nil, SDL.GetErrorString())
+	assert(game.window != nil, SDL.GetErrorString())
 
-	game.renderer = SDL.CreateRenderer(window, -1, RENDER_FLAGS)
+	game.renderer = SDL.CreateRenderer(game.window, -1, RENDER_FLAGS)
 	assert(game.renderer != nil, SDL.GetErrorString())
 	SDL.RenderSetLogicalSize(
 		game.renderer,
@@ -59,7 +60,7 @@ init_sdl :: proc() {
 
 free_sdl :: proc() {
 	defer SDL.Quit()
-	defer SDL.DestroyWindow(window)
+	defer SDL.DestroyWindow(game.window)
 	defer SDL.DestroyRenderer(game.renderer)
 	defer SDL_TTF.Quit()
 }
