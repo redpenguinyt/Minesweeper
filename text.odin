@@ -22,7 +22,6 @@ create_chars :: proc() {
 		game.chars[i] = create_text(cstring(raw_data(str)))
 		i += 1
 	}
-
 }
 
 // create textures for the given str
