@@ -1,8 +1,6 @@
 package main
 
 import "core:fmt"
-import "core:math/rand" // for rand seed
-import "core:time"
 import SDL "vendor:sdl2"
 import SDL_TTF "vendor:sdl2/ttf"
 
