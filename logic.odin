@@ -1,7 +1,7 @@
 package main
 
-import "core:time" // for rand seed
-import "core:math/rand"
+import "core:math/rand"// for rand seed
+import "core:time"
 import SDL "vendor:sdl2"
 
 generate_mine_field :: proc() {
