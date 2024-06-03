@@ -8,6 +8,6 @@
 	"enable_fake_methods": true,
 	"profile": "default",
 	"profiles": [
-		{ "name": "linux_profile", "os": "linux", "checker_path": ["main.odin"]}
+		{ "name": "linux_profile", "os": "linux", "checker_path": ["src/main.odin"]}
 	]
 }
