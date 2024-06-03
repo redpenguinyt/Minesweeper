@@ -42,7 +42,7 @@ init_sdl :: proc() {
 	assert(sdl_init_error == 0, SDL.GetErrorString())
 
 	game.window = SDL.CreateWindow(
-		"SDL2 Example",
+		"Minesweeper",
 		SDL.WINDOWPOS_CENTERED,
 		SDL.WINDOWPOS_CENTERED,
 		GRID_WIDTH * TILE_SIDE_LENGTH * 3,
