@@ -75,7 +75,7 @@ main :: proc() {
 	defer free_sdl()
 
 	// Set up game
-	game.font = SDL_TTF.OpenFont("mine-sweeper.ttf", FONT_SIZE)
+	game.font = SDL_TTF.OpenFont("minesweeper-font/minesweeper.ttf", FONT_SIZE)
 	assert(game.font != nil, SDL.GetErrorString())
 	create_chars()
 	generate_mine_field()
