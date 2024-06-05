@@ -146,6 +146,14 @@ draw_grid :: proc() {
 }
 
 draw_game_over_messages :: proc() {
+	if game.state == .Playing {
+		return
+	}
+
+	SDL.SetRenderDrawColor(game.renderer, 255, 255, 255, 100)
+	SDL.RenderFillRect(game.renderer, &SDL.Rect{60, 70, 200, 36})
+	SDL.SetRenderDrawColor(game.renderer, 0, 0, 0, 100)
+
 	#partial switch game.state {
 	case .Died:
 		died_text: Text = create_text("You died", 2)
