@@ -27,7 +27,6 @@ GameState :: enum {
 }
 
 Game :: struct {
-	window:   ^SDL.Window,
 	renderer: ^SDL.Renderer,
 	font:     ^SDL_TTF.Font,
 	chars:    [10]Text,
@@ -37,42 +36,8 @@ Game :: struct {
 
 game := Game{}
 
-init_sdl :: proc() {
-	sdl_init_error := SDL.Init(SDL.INIT_VIDEO)
-	assert(sdl_init_error == 0, SDL.GetErrorString())
-
-	game.window = SDL.CreateWindow(
-		"Minesweeper",
-		SDL.WINDOWPOS_CENTERED,
-		SDL.WINDOWPOS_CENTERED,
-		GRID_WIDTH * TILE_SIDE_LENGTH * 3,
-		GRID_HEIGHT * TILE_SIDE_LENGTH * 3,
-		WINDOW_FLAGS,
-	)
-	assert(game.window != nil, SDL.GetErrorString())
-
-	game.renderer = SDL.CreateRenderer(game.window, -1, RENDER_FLAGS)
-	assert(game.renderer != nil, SDL.GetErrorString())
-	SDL.RenderSetLogicalSize(
-		game.renderer,
-		GRID_WIDTH * TILE_SIDE_LENGTH,
-		GRID_HEIGHT * TILE_SIDE_LENGTH,
-	)
-
-	ttf_init_error := SDL_TTF.Init()
-	assert(ttf_init_error != -1, SDL.GetErrorString())
-}
-
-free_sdl :: proc() {
-	defer SDL.Quit()
-	defer SDL.DestroyWindow(game.window)
-	defer SDL.DestroyRenderer(game.renderer)
-	defer SDL_TTF.Quit()
-}
-
 main :: proc() {
 	init_sdl()
-	defer free_sdl()
 
 	// Set up game
 	game.font = SDL_TTF.OpenFont("minesweeper-font/minesweeper.ttf", FONT_SIZE)
