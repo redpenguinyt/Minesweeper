@@ -106,7 +106,7 @@ draw_grid :: proc() {
 			// Draw X on mine tiles when game is over
 			// oh my god this code is horrific
 			if game.state != .Playing && tile.is_mine {
-				SDL.SetRenderDrawColor(game.renderer, 255, 0, 0, 100)
+				SDL.SetRenderDrawColor(game.renderer, 0, 0, 0, 100)
 
 				draw_top_left_to_bottom_right := proc(
 					origin: SDL.Point,
