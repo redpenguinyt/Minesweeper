@@ -1,5 +1,6 @@
 package main
 
+import "core:time"
 import SDL "vendor:sdl2"
 import SDL_TTF "vendor:sdl2/ttf"
 

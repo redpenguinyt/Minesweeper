@@ -1,6 +1,6 @@
 package main
 
-import "core:math/rand"// for rand seed
+import "core:math/rand" // for rand seed
 import "core:time"
 import SDL "vendor:sdl2"
 

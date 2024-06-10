@@ -37,17 +37,14 @@ game := Game{}
 main :: proc() {
 	init_sdl()
 
-	// Set up game
 	game.font = SDL_TTF.OpenFont("minesweeper-font/minesweeper.ttf", FONT_SIZE)
 	assert(game.font != nil, SDL.GetErrorString())
 	create_chars()
 	generate_mine_field()
 
-	// We'll have to poll for queued events each game loop
 	event: SDL.Event
-
 	game_loop: for {
-		if SDL.PollEvent(&event) {
+		for SDL.PollEvent(&event) {
 			if event.type == SDL.EventType.QUIT || event.key.keysym.scancode == .ESCAPE do break game_loop
 
 			if game.state == .Playing {
