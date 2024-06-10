@@ -3,6 +3,10 @@ package main
 import SDL "vendor:sdl2"
 import SDL_TTF "vendor:sdl2/ttf"
 
+RENDER_FLAGS :: SDL.RENDERER_ACCELERATED
+WINDOW_FLAGS :: SDL.WINDOW_SHOWN | SDL.WINDOW_RESIZABLE
+FPS :: 60
+
 @(deferred_out = free_sdl)
 init_sdl :: proc() -> ^SDL.Window {
 
@@ -38,4 +42,18 @@ free_sdl :: proc(window: ^SDL.Window) {
 	SDL.DestroyWindow(window)
 	SDL.DestroyRenderer(game.renderer)
 	SDL_TTF.Quit()
+}
+
+sleep_frame :: proc() {
+	@(static)
+	frame_started: time.Time
+
+	FPS_DURATION :: time.Second / FPS
+	elapsed := time.since(frame_started)
+
+	if elapsed < FPS_DURATION {
+		time.sleep(FPS_DURATION - elapsed)
+	}
+
+	frame_started = time.now()
 }

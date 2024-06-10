@@ -4,8 +4,6 @@ import "core:fmt"
 import SDL "vendor:sdl2"
 import SDL_TTF "vendor:sdl2/ttf"
 
-RENDER_FLAGS :: SDL.RENDERER_ACCELERATED
-WINDOW_FLAGS :: SDL.WINDOW_SHOWN | SDL.WINDOW_RESIZABLE
 GRID_WIDTH: i32 : 16
 GRID_HEIGHT: i32 : 16
 TILE_SIDE_LENGTH :: 20
@@ -73,6 +71,8 @@ main :: proc() {
 		draw_game_over_messages()
 
 		SDL.RenderPresent(game.renderer)
+
+		sleep_frame()
 	}
 }
 
