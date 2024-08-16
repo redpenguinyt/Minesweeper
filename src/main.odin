@@ -77,10 +77,7 @@ handle_game_events :: proc(event: ^SDL.Event) {
 	// Hover effect
 	x, y: i32
 	if SDL.GetMouseState(&x, &y) == 1 {
-		tile_pos := SDL.Point {
-			event.button.x / TILE_SIDE_LENGTH,
-			event.button.y / TILE_SIDE_LENGTH,
-		}
+		tile_pos := SDL.Point{event.button.x / TILE_SIDE_LENGTH, event.button.y / TILE_SIDE_LENGTH}
 
 		if !game.grid[tile_pos.x][tile_pos.y].flagged {
 			for &column in game.grid {
@@ -100,10 +97,7 @@ handle_game_events :: proc(event: ^SDL.Event) {
 
 	// Uncovering a tile
 	if event.type == SDL.EventType.MOUSEBUTTONUP && event.button.button == 1 {
-		tile_pos := SDL.Point {
-			event.button.x / TILE_SIDE_LENGTH,
-			event.button.y / TILE_SIDE_LENGTH,
-		}
+		tile_pos := SDL.Point{event.button.x / TILE_SIDE_LENGTH, event.button.y / TILE_SIDE_LENGTH}
 
 		if !game.grid[tile_pos.x][tile_pos.y].flagged {
 			if uncover_tile(tile_pos) {
@@ -117,16 +111,11 @@ handle_game_events :: proc(event: ^SDL.Event) {
 	}
 
 	// Flagging a tile
-	if event.type == SDL.EventType.MOUSEBUTTONDOWN &&
-	   event.button.button == 3 {
-		tile_pos := SDL.Point {
-			event.button.x / TILE_SIDE_LENGTH,
-			event.button.y / TILE_SIDE_LENGTH,
-		}
+	if event.type == SDL.EventType.MOUSEBUTTONDOWN && event.button.button == 3 {
+		tile_pos := SDL.Point{event.button.x / TILE_SIDE_LENGTH, event.button.y / TILE_SIDE_LENGTH}
 
 		if !game.grid[tile_pos.x][tile_pos.y].is_uncovered {
-			game.grid[tile_pos.x][tile_pos.y].flagged =
-			!game.grid[tile_pos.x][tile_pos.y].flagged
+			game.grid[tile_pos.x][tile_pos.y].flagged = !game.grid[tile_pos.x][tile_pos.y].flagged
 		}
 	}
 }

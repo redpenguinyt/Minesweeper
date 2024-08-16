@@ -29,11 +29,7 @@ create_chars :: proc() {
 // relative to the current game.font_size
 create_text :: proc(str: cstring, scale: i32 = 1) -> Text {
 	// create surface
-	surface := SDL_TTF.RenderText_Solid(
-		game.font,
-		str,
-		SDL.Color{0, 0, 0, 255},
-	)
+	surface := SDL_TTF.RenderText_Solid(game.font, str, SDL.Color{0, 0, 0, 255})
 	defer SDL.FreeSurface(surface)
 
 	// create texture to render

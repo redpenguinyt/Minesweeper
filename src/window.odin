@@ -46,8 +46,7 @@ free_sdl :: proc(window: ^SDL.Window) {
 }
 
 sleep_frame :: proc() {
-	@(static)
-	frame_started: time.Time
+	@(static)frame_started: time.Time
 
 	FPS_DURATION :: time.Second / FPS
 	elapsed := time.since(frame_started)

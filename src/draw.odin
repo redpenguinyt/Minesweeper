@@ -5,10 +5,7 @@ import SDL "vendor:sdl2"
 draw_grid :: proc() {
 	for grid_x in 0 ..< GRID_WIDTH {
 		for grid_y in 0 ..< GRID_HEIGHT {
-			origin := SDL.Point {
-				grid_x * TILE_SIDE_LENGTH,
-				grid_y * TILE_SIDE_LENGTH,
-			}
+			origin := SDL.Point{grid_x * TILE_SIDE_LENGTH, grid_y * TILE_SIDE_LENGTH}
 			tile := game.grid[grid_x][grid_y]
 
 			SDL.SetRenderDrawColor(game.renderer, 111, 111, 111, 100)
@@ -29,12 +26,7 @@ draw_grid :: proc() {
 			SDL.SetRenderDrawColor(game.renderer, 189, 189, 189, 100)
 			SDL.RenderFillRect(
 				game.renderer,
-				&SDL.Rect {
-					origin.x + 1,
-					origin.y + 1,
-					TILE_SIDE_LENGTH - 1,
-					TILE_SIDE_LENGTH - 1,
-				},
+				&SDL.Rect{origin.x + 1, origin.y + 1, TILE_SIDE_LENGTH - 1, TILE_SIDE_LENGTH - 1},
 			)
 
 			if tile.is_uncovered {
@@ -53,40 +45,20 @@ draw_grid :: proc() {
 				SDL.SetRenderDrawColor(game.renderer, 255, 255, 255, 100)
 				SDL.RenderFillRect(
 					game.renderer,
-					&SDL.Rect {
-						origin.x + 1,
-						origin.y + 1,
-						TILE_SIDE_LENGTH - 1,
-						3,
-					},
+					&SDL.Rect{origin.x + 1, origin.y + 1, TILE_SIDE_LENGTH - 1, 3},
 				)
 				SDL.RenderFillRect(
 					game.renderer,
-					&SDL.Rect {
-						origin.x + 1,
-						origin.y + 1,
-						3,
-						TILE_SIDE_LENGTH - 1,
-					},
+					&SDL.Rect{origin.x + 1, origin.y + 1, 3, TILE_SIDE_LENGTH - 1},
 				)
 				SDL.SetRenderDrawColor(game.renderer, 123, 123, 123, 100)
 				SDL.RenderFillRect(
 					game.renderer,
-					&SDL.Rect {
-						origin.x + 1,
-						origin.y + 17,
-						TILE_SIDE_LENGTH - 1,
-						3,
-					},
+					&SDL.Rect{origin.x + 1, origin.y + 17, TILE_SIDE_LENGTH - 1, 3},
 				)
 				SDL.RenderFillRect(
 					game.renderer,
-					&SDL.Rect {
-						origin.x + 17,
-						origin.y + 1,
-						3,
-						TILE_SIDE_LENGTH - 1,
-					},
+					&SDL.Rect{origin.x + 17, origin.y + 1, 3, TILE_SIDE_LENGTH - 1},
 				)
 			}
 
@@ -108,10 +80,7 @@ draw_grid :: proc() {
 			if game.state != .Playing && tile.is_mine {
 				SDL.SetRenderDrawColor(game.renderer, 0, 0, 0, 100)
 
-				draw_top_left_to_bottom_right := proc(
-					origin: SDL.Point,
-					x, y: i32,
-				) {
+				draw_top_left_to_bottom_right := proc(origin: SDL.Point, x, y: i32) {
 					SDL.RenderDrawLine(
 						game.renderer,
 						origin.x + 3 + x,
@@ -124,10 +93,7 @@ draw_grid :: proc() {
 				draw_top_left_to_bottom_right(origin, 1, 0)
 				draw_top_left_to_bottom_right(origin, 0, 1)
 
-				draw_top_right_to_bottom_left := proc(
-					origin: SDL.Point,
-					x, y: i32,
-				) {
+				draw_top_right_to_bottom_left := proc(origin: SDL.Point, x, y: i32) {
 					SDL.RenderDrawLine(
 						game.renderer,
 						origin.x + TILE_SIDE_LENGTH - 3 - x,
@@ -163,7 +129,7 @@ draw_game_over_messages :: proc() {
 	case .Won:
 		died_text: Text = create_text("You won!", 2)
 		died_text.dest.x = 74
-		died_text.dest.y = 90
+		died_text.dest.y = 70
 		SDL.RenderCopy(game.renderer, died_text.tex, nil, &died_text.dest)
 	}
 }

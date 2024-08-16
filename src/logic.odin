@@ -5,13 +5,10 @@ import "core:time"
 import SDL "vendor:sdl2"
 
 generate_mine_field :: proc() {
-	my_rand: rand.Rand
-	rand.init(&my_rand, cast(u64)time.time_to_unix_nano(time.now()))
-
 	for i := 0; i < MINE_COUNT; i += 1 {
 		tile_pos := SDL.Point {
-			rand.int31(&my_rand) % GRID_WIDTH,
-			rand.int31(&my_rand) % GRID_HEIGHT,
+			rand.int31() % GRID_WIDTH,
+			rand.int31() % GRID_HEIGHT,
 		}
 		if game.grid[tile_pos.x][tile_pos.y].is_mine {
 			i -= 1
